@@ -21,10 +21,9 @@ private fun part2(reports: List<List<Int>>): Int = reports.count { report ->
 }
 
 private fun isSafe(report: List<Int>): Boolean {
-    val windowed = report.windowed(2)
-    val descending = windowed.map { (a, b) -> a > b }.all { it }
-    val ascending = windowed.map { (a, b) -> a < b }.all { it }
-    val validDifference = 1..3
-    val correctDifference = windowed.map { (a, b) -> abs(a - b) in validDifference }.all { it }
+    val windowedReport = report.windowed(2)
+    val descending = windowedReport.all { (a, b) -> a > b }
+    val ascending = windowedReport.all { (a, b) -> a < b }
+    val correctDifference = windowedReport.all { (a, b) -> abs(a - b) in 1..3 }
     return (ascending || descending) && correctDifference
 }
