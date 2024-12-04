@@ -41,9 +41,5 @@ private fun findWord(word: String, input: List<List<Char>>, row: Int, col: Int, 
     val (dx, dy) = direction
     val isValid = row in input.indices && col in input[row].indices && row + dx * (word.length - 1) in input.indices
             && col + dy * (word.length - 1) in input[row].indices
-    return if (isValid) {
-        (0..(word.length - 1)).map { input[row + (dx * it)][col + (dy * it)] }.joinToString("") == word
-    } else {
-        false
-    }
+    return isValid && (0..(word.length - 1)).map { input[row + (dx * it)][col + (dy * it)] }.joinToString("") == word
 }

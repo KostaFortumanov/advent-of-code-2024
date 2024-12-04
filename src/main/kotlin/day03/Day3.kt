@@ -16,27 +16,19 @@ private fun part1(input: String): Int =
 
 private fun part2(input: String): Int {
     val instructions = Regex("mul\\(\\d+,\\d+\\)|don't\\(\\)|do\\(\\)").findAll(input).toList()
-    val (_, finalState) = generateSequence(0 to State(0, false)) { (index, state) ->
-        val nextState = when (val instruction = instructions[index].value) {
-            "do()" -> {
-                state.copy(disabled = false)
-            }
+    return instructions.fold(0 to false) { (result, disabled), it ->
+        when (val instruction = it.value) {
+            "do()" -> result to false
 
-            "don't()" -> {
-                state.copy(disabled = true)
-            }
+            "don't()" -> result to true
 
-            else -> if (state.disabled) {
-                state
+            else -> if (disabled) {
+                result to true
             } else {
-                state.copy(result = state.result + multiplyInstruction(instruction))
+                (result + multiplyInstruction(instruction)) to false
             }
         }
-        index + 1 to nextState
-    }.take(instructions.size).last()
-    return finalState.result
+    }.first
 }
 
 private fun multiplyInstruction(instruction: String): Int = instruction.integers().let { (a, b) -> a * b }
-
-private data class State(val result: Int, val disabled: Boolean)

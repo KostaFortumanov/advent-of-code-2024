@@ -17,7 +17,7 @@ private fun part1(reports: List<List<Int>>): Int = reports.count { isSafe(it) }
 private fun part2(reports: List<List<Int>>): Int = reports.count { report ->
     (listOf(report) + List(report.size) {
         report.subList(0, it) + report.subList(it + 1, report.size)
-    }).fold(false) { acc, it -> acc || isSafe(it) }
+    }).any { isSafe(it) }
 }
 
 private fun isSafe(report: List<Int>): Boolean {
