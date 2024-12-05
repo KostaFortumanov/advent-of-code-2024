@@ -10,6 +10,15 @@ fun readFileCharMatrix(day: Int): List<List<Char>> =
 
 fun String.integers() = Regex("-?\\d+").findAll(this).map { it.value.toInt() }.toList()
 
+fun <T> List<T>.split(predicate: (T) -> Boolean): List<List<T>> =
+    fold(listOf(emptyList())) { acc, element ->
+        if (predicate(element)) {
+            acc + listOf(emptyList())
+        } else {
+            acc.dropLast(1) + listOf(acc.last() + element)
+        }
+    }
+
 fun <T> List<List<T>>.transpose(): List<List<T>> = List(first().size) { i -> List(size) { j -> this[j][i] } }
 
 fun Any?.println() = println(this)
