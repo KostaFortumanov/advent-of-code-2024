@@ -7,19 +7,16 @@ import split
 
 fun main() {
     val (rules, updates) = readFileLines(5).split { it == "" }
+    val (validUpdates, invalidUpdates) = partitionUpdates(rules.toSet(), updates)
 
-    part1(rules.toSet(), updates).println()
-    part2(rules.toSet(), updates).println()
+    part1(validUpdates).println()
+    part2(rules.toSet(), invalidUpdates).println()
 }
 
-private fun part1(rules: Set<String>, updates: List<String>): Int {
-    val (validUpdates, _) = partitionRules(rules, updates)
-    return validUpdates.sumOf { it[it.size / 2] }
-}
+private fun part1(validUpdates: List<List<Int>>): Int = validUpdates.sumOf { it[it.size / 2] }
 
-private fun part2(rules: Set<String>, updates: List<String>): Int {
-    val (_, invalidUpdates) = partitionRules(rules, updates)
-    return invalidUpdates.map {
+private fun part2(rules: Set<String>, invalidUpdates: List<List<Int>>): Int =
+    invalidUpdates.map {
         it.sortedWith { a, b ->
             val validRule = rules.contains("$a|$b")
             val invalidRule = rules.contains("$b|$a")
@@ -31,9 +28,8 @@ private fun part2(rules: Set<String>, updates: List<String>): Int {
             }
         }
     }.sumOf { it[it.size / 2] }
-}
 
-private fun partitionRules(rules: Set<String>, updates: List<String>): Pair<List<List<Int>>, List<List<Int>>> =
+private fun partitionUpdates(rules: Set<String>, updates: List<String>): Pair<List<List<Int>>, List<List<Int>>> =
     updates
         .map { it.integers() }
         .partition { list ->
