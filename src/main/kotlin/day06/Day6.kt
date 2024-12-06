@@ -2,6 +2,8 @@ package day06
 
 import println
 import readFileCharMatrix
+import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
 
 fun main() {
     part1().println()
@@ -13,7 +15,7 @@ private fun part1() = lastState(State()).visited.size
 private fun part2(): Int {
     val visited = lastState(State()).visited
     return visited.drop(1).count {
-        lastState(State(obstructions = (State.gridObstructions + it).toHashSet())).isLoop
+        lastState(State(obstructions = State.gridObstructions + it)).isLoop
     }
 }
 
@@ -21,9 +23,9 @@ private fun lastState(state: State) = generateSequence(state) { it.next() }.last
 
 private data class State(
     val guardPosition: Position = startPosition,
-    val obstructions: HashSet<Pair<Int, Int>> = gridObstructions,
+    val obstructions: Set<Pair<Int, Int>> = gridObstructions,
     val isLoop: Boolean = false,
-    private val visitedPositions: HashSet<Position> = hashSetOf(startPosition),
+    private val visitedPositions: MutableSet<Position> = mutableSetOf(startPosition),
 ) {
     val visited: Set<Pair<Int, Int>>
         get() = visitedPositions.map { it.coordinates }.toSet()
@@ -49,23 +51,15 @@ private data class State(
     companion object {
         val grid = readFileCharMatrix(6)
         val startPosition = grid.flatMapIndexed { rowIndex, row ->
-            row.mapIndexedNotNull { colIndex, it ->
-                if (grid[rowIndex][colIndex] == '^') {
-                    Position(rowIndex, colIndex, Direction.NORTH)
-                } else {
-                    null
-                }
+            row.mapIndexedNotNull { colIndex, value ->
+                Position(rowIndex, colIndex, Direction.NORTH).takeIf { value == '^' }
             }
         }.first()
         val gridObstructions = grid.flatMapIndexed { rowIndex, row ->
-            row.mapIndexedNotNull { colIndex, it ->
-                if (grid[rowIndex][colIndex] == '#') {
-                    rowIndex to colIndex
-                } else {
-                    null
-                }
+            row.mapIndexedNotNull { colIndex, value ->
+                (rowIndex to colIndex).takeIf { value == '#' }
             }
-        }.toHashSet()
+        }.toSet()
     }
 }
 
