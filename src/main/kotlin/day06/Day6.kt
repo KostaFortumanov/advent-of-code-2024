@@ -2,8 +2,6 @@ package day06
 
 import println
 import readFileCharMatrix
-import kotlin.system.measureNanoTime
-import kotlin.system.measureTimeMillis
 
 fun main() {
     part1().println()
