@@ -12,6 +12,9 @@ private fun readFileMatrix(day: Int): List<List<String>> =
 fun readFileCharMatrix(day: Int): List<List<Char>> =
     readFileMatrix(day).map { line -> line.map { it.first() } }
 
+fun readFileIntMatrix(day: Int): List<List<Int>> =
+    readFileMatrix(day).map { line -> line.map { it.toInt() } }
+
 fun String.integers() = Regex("-?\\d+").findAll(this).map { it.value.toInt() }.toList()
 
 fun String.longs() = Regex("-?\\d+").findAll(this).map { it.value.toLong() }.toList()
